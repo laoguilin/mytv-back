@@ -22,9 +22,9 @@ echo ""
 existing_container=$(docker ps -a --filter "name=allinone" --format "{{.Names}}")
 if [ -n "$existing_container" ]; then
     while true; do
-	echo -e ${RED}
+        echo -e ${RED}
         read -p "allinone容器已存在，是否重新部署？(y/n): " choice
-	echo -e ${NC}
+        echo -e ${NC}
         case $choice in
             [yY])
                 docker stop allinone
@@ -132,4 +132,3 @@ else
 fi
 
 exit 0
-
