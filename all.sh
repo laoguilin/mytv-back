@@ -29,8 +29,7 @@ if [ -n "$existing_container" ]; then
         echo -e ${NC}
         case $choice in
             [yY])
-                docker stop allinone
-                docker rm allinone
+                docker rm -f allinone
                 docker rmi $image_name:latest
                 break
                 ;;
