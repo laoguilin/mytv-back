@@ -4,6 +4,7 @@
 RED='\033[0;31m'
 GRE='\033[0;32m'
 NC='\033[0m' # 重置颜色
+PROXY_IMG="docker.zhai.cm/youshandefeiyang/allinone" #设置代理加速拉取镜像
 
 # 定义信号处理函数
 trap_ctrl_c() {
@@ -15,6 +16,7 @@ trap_ctrl_c() {
 trap trap_ctrl_c SIGINT
 
 echo -e "${RED}本脚本在ubuntu环境运行正常，其它系统请自行测试。按任意键继续执行或按Ctrl+c退出脚本。${NC}"
+image_name=$(docker inspect --format '{{.Config.Image}}' allinone 2>/dev/null)
 read -n 1 -s -r -p ""
 echo ""
 
@@ -29,7 +31,7 @@ if [ -n "$existing_container" ]; then
             [yY])
                 docker stop allinone
                 docker rm allinone
-                docker rmi youshandefeiyang/allinone:latest
+                docker rmi $image_name:latest
                 break
                 ;;
             [nN])
@@ -107,11 +109,11 @@ echo -e ${GRE}
 echo -e ${NC}
     case $network_choice in
         1)
-            container_id=$(docker run -d --restart always --net=host --privileged=true --name allinone youshandefeiyang/allinone "-tv=$tv" "-aesKey=$aesKey" "-userid=$userid" "-token=$token")
+            container_id=$(docker run -d --restart always --net=host --privileged=true --name allinone $PROXY_IMG "-tv=$tv" "-aesKey=$aesKey" "-userid=$userid" "-token=$token")
             break
             ;;
         2)
-            container_id=$(docker run -d --restart always --privileged=true -p 35455:35455 --name allinone youshandefeiyang/allinone "-tv=$tv" "-aesKey=$aesKey" "-userid=$userid" "-token=$token")
+            container_id=$(docker run -d --restart always --privileged=true -p 35455:35455 --name allinone $PROXY_IMG "-tv=$tv" "-aesKey=$aesKey" "-userid=$userid" "-token=$token")
             break
             ;;
         *)
